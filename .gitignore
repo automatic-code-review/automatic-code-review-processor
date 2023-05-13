@@ -1,0 +1,20 @@
+# JetBrains
+
+.idea/*
+*.iml
+
+# Python
+
+**__pycache__**
+
+# Runtime
+
+resources/output/*
+resources/configs/*
+resources/workspace/*
+resources/extensions/*
+
+!resources/output/.keep
+!resources/configs/.keep
+!resources/workspace/.keep
+!resources/extensions/.keep
