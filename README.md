@@ -1,0 +1,32 @@
+- TODO LIST
+    - REFATORAR SEPARANDO METHOD O CODIGO
+    - RESOLVER TODOS
+    - ESCREVER UNIT TEST
+    - DOCUMENTAR CODIGO FONTE
+    - DOCUMENTAR README.md
+        - O QUE É
+        - REQUISITOS
+            - GIT
+            - PYTHON
+        - AUTHOR
+        - COMO EXECUTAR O CODIGO
+        - COMO CONFIGURAR UM PLUGIN
+        - LISTA DE PLUGINS
+        - USANDO DOCKER NO CI/CD
+        - LICENCA
+        - CONTRIBUA
+        - FUTURAS IMPLEMENTACOES
+            - FRONTEND PARA UPLOAD DE PLUGINS
+            - FORM PARA CONFIGURACAO DE PLUGIN
+            - AUTENTICACAO NO FRONTEND
+            - PLUGINS
+                - REGEX NO CODIGO FONTE
+                - BRANCH DIFERENTE
+                - SONAR ISSUE
+                - REGEX PARA TITULO DE MERGE
+                - INCLUDES NAO USADOS C++
+                - IDENTACAO USANDO UNSCRUSIFY
+                - REGEX PARA NOME DE ARQUIVO
+                - OBRIGAR USO DO UNIQUE PTR
+                - USO DO AUTO
+                - VERIFICACAO VIA IA A PARTIR DE TREINAMENTO ACOMPANHANDO
