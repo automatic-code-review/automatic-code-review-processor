@@ -39,6 +39,10 @@ def main():
         path_resources=path_resources,
         merge={
             'title': merge.title,
+            'branch': {
+                'target': merge.target_branch,
+                'source': merge.source_branch,
+            },
             "project_id": args.GIT_PROJECT_ID,
             "merge_request_id": args.GIT_MERGE_REQUEST_ID,
         }

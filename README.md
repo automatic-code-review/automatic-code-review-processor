@@ -60,7 +60,7 @@
                 - REGEX NO CODIGO FONTE (OK | acr-regex)
                 - SONAR ISSUE (OK | acr-sonar)
                 - REGEX PARA TITULO DE MERGE (OK | acr-regex)
-                - BRANCH DIFERENTE
+                - BRANCH DIFERENTE  (OK | acr-branch)
                 - INCLUDES NAO USADOS C++
                 - IDENTACAO USANDO UNSCRUSIFY
                 - REGEX PARA NOME DE ARQUIVO
