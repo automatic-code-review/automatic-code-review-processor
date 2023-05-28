@@ -3,7 +3,7 @@ import os
 import subprocess
 
 
-def review(path_source, path_target, path_resources):
+def review(path_source, path_target, path_resources, merge):
     path_output = path_resources + "/output"
     path_extensions = path_resources + "/extensions"
 
@@ -22,6 +22,7 @@ def review(path_source, path_target, path_resources):
                 path_target=path_target,
                 path_source=path_source,
                 path_output=path_output_data,
+                merge=merge,
             )
 
             path_python_app = path_extension + "/app.py"
@@ -43,6 +44,7 @@ def __write_config(
         path_target,
         path_source,
         path_output,
+        merge,
 ):
     path_config = path_resources + "/configs/" + extension + "/config.json"
     path_config_final = path_extensions + '/' + extension + "/config.json"
@@ -52,6 +54,7 @@ def __write_config(
         config['path_target'] = path_target
         config['path_source'] = path_source
         config['path_output'] = path_output
+        config['merge'] = merge
 
     with open(path_config_final, 'w') as arquivo:
         json.dump(config, arquivo, indent=True)

@@ -37,6 +37,10 @@ def main():
         path_target=path_target,
         path_source=path_source,
         path_resources=path_resources,
+        merge={
+            "project_id": args.GIT_PROJECT_ID,
+            "merge_request_id": args.GIT_MERGE_REQUEST_ID,
+        }
     )
 
     publish.publish(
