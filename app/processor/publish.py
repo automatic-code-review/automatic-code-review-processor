@@ -2,16 +2,22 @@ from infra.git import git_wrapper_factory
 
 
 def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token, git_user):
+    print('automatic-code-review::publish - start')
+
     git = git_wrapper_factory.create(
         git_enum=git_enum,
         git_url=git_url,
         git_token=git_token,
     )
 
+    print('automatic-code-review::publish - get threads')
     threads = git.get_threads_by_merge_request(
         id_project=id_project,
         id_merge_request=id_merge_request,
     )
+    qt_thread = len(threads)
+
+    print(f'automatic-code-review::publish - [QT_THREADS] {qt_thread}')
 
     for thread in threads:
         message_id = None
@@ -40,11 +46,18 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
         found = False
         for comment in comments:
             if comment['id'] == message_id:
+                print(
+                    f'automatic-code-review::publish - comment already added '
+                    f'[THREAD_ID] {thread.id} '
+                    f'[MESSAGE] {message}'
+                )
                 comment['found'] = True
                 found = True
                 break
 
         if not found:
+            print(f'automatic-code-review::publish - resolve thread [THREAD_ID] {thread.id} [MESSAGE] {message}')
+
             git.resolve_merge_request_thread(
                 id_thread=thread.id,
                 id_project=id_project,
@@ -62,6 +75,8 @@ ___
 
 AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
 
+            print(f'automatic-code-review::publish add new comment [COMMENT] {comment_final}')
+
             git.create_merge_request_thread(
                 comment=comment_final,
                 id_project=id_project,
@@ -69,3 +84,5 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
             )
 
     # TODO ADICIONAR OU REMOVER UPVOTED AND APPROVED
+
+    print('automatic-code-review::publish - end')

@@ -12,17 +12,21 @@ def setup(
         path_resources,
         git_enum,
 ):
+    print('automatic-code-review::setup - start')
+
     git = git_wrapper_factory.create(
         git_enum=git_enum,
         git_url=git_url,
         git_token=git_token,
     )
 
+    print('automatic-code-review::setup - find merge request data')
     merge_request = git.get_merge_request(
         id_merge_request=id_merge_request,
         id_project=id_project_target,
     )
 
+    print('automatic-code-review::setup - find merge changes')
     changes = git.get_changes_by_merge(
         id_merge_request=id_merge_request,
         id_project=id_project_target,
@@ -32,6 +36,7 @@ def setup(
     path_target = path + "/repo_target"
     path_source = path + "/repo_source"
 
+    print('automatic-code-review::setup - setup target repository')
     __setup(
         path=path_target,
         changes=changes,
@@ -43,6 +48,7 @@ def setup(
         git=git,
     )
 
+    print('automatic-code-review::setup - setup source repository')
     __setup(
         path=path_source,
         changes=changes,
@@ -57,7 +63,9 @@ def setup(
         git=git,
     )
 
-    return path_target, path_source
+    print('automatic-code-review::setup - end')
+
+    return path_target, path_source, merge_request
 
 
 def __setup(

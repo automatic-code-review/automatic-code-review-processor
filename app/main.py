@@ -23,7 +23,7 @@ def main():
 
     path_resources = os.path.dirname(os.path.abspath(__file__)) + "/../resources"
 
-    path_target, path_source = workspace.setup(
+    path_target, path_source, merge = workspace.setup(
         git_url=args.GIT_URL,
         git_user=args.GIT_USER,
         git_token=args.GIT_TOKEN,
@@ -38,6 +38,7 @@ def main():
         path_source=path_source,
         path_resources=path_resources,
         merge={
+            'title': merge.title,
             "project_id": args.GIT_PROJECT_ID,
             "merge_request_id": args.GIT_MERGE_REQUEST_ID,
         }

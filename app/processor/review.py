@@ -4,6 +4,8 @@ import subprocess
 
 
 def review(path_source, path_target, path_resources, merge):
+    print('automatic-code-review::review - start')
+
     path_output = path_resources + "/output"
     path_extensions = path_resources + "/extensions"
 
@@ -13,7 +15,10 @@ def review(path_source, path_target, path_resources, merge):
         path_extension = os.path.join(path_extensions, extension_name)
 
         if os.path.isdir(path_extension):
+            print(f'automatic-code-review::review - {extension_name} start')
+
             path_output_data = path_output + "/" + extension_name + "_data.json"
+            print(f'automatic-code-review::review - {extension_name} write config [OUTPUT] {path_output_data}')
 
             __write_config(
                 extension=extension_name,
@@ -26,13 +31,26 @@ def review(path_source, path_target, path_resources, merge):
             )
 
             path_python_app = path_extension + "/app.py"
+            print(f'automatic-code-review::review - {extension_name} run start [APP] {path_python_app}')
+
             subprocess.run(['python3.10', path_python_app])
 
+            print(f'automatic-code-review::review - {extension_name} run end, start read output')
+
             with open(path_output_data, 'r') as arquivo:
-                for comment in json.load(arquivo):
+                comments_by_extension = json.load(arquivo)
+                qt_comments = len(comments_by_extension)
+
+                print(f'automatic-code-review::review - {extension_name} [QT_COMMENTS] {qt_comments}')
+
+                for comment in comments_by_extension:
                     comment_id = comment['id']
                     comment['id'] = f"{extension_name}:{comment_id}"
                     comments.append(comment)
+
+            print(f'automatic-code-review::review - {extension_name} end')
+
+    print('automatic-code-review::review - end')
 
     return comments
 
