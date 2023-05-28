@@ -1,12 +1,17 @@
 - TODO LIST
     - RESOLVER TODOS
     - ESCREVER UNIT TEST
-    - DOCUMENTAR CODIGO FONTE
+    - DOCUMENTAR CODIGO FONTE (EM INGLES)
+    - ESCREVER CODIGO EM INGLES
+    - CRIAR DOCUMENTACAO
+        - PORTUGUES
+        - INGLES
+        - ESPANHOL
     - DOCUMENTAR COMO USAR
         - CRIAR IMAGEM DOCKER
             - LINUX
-            - INSTAR O PYTHON
-            - BAIXA O PROJEOT
+            - INSTALAR O PYTHON
+            - BAIXAR O PROJETO
                 - BRANCH LTS
             - DEIXA AS PASTAS PARA CONFIGURAR EXTENSION
                 - /extensions
@@ -21,14 +26,24 @@
                     - AQUI TALVEZ SEJA MELHOR COPIAR SO NA HORA DE EXECUTAR, PARA NAO EXPOR AS CONFIGS
                 - BAIXA OS PROJETOS META E COPIA PARA O LUGAR CERTO
                 - BUSSCA TODOS OS requirements.txt E EXECUTA O PIP INSTALL
+        - PIPELINE
+            - PEGA A IMAGEM GERADA
+            - COPIA DADOS CONFIGS
+            - SETA DAS VARIAVEIS DE AMBIENTES CONFIGS SENSIVEIS
+            - EXECUTA O ARQUIVO app.py PASSANDO OS PARAMETROS NECESSARIOS
     - DOCUMENTAR README.md
         - O QUE É
         - REQUISITOS
             - GIT
             - PYTHON
+            - PARAMETROS
         - AUTHOR
         - COMO EXECUTAR O CODIGO
         - COMO CONFIGURAR UM PLUGIN
+        - COMO CRIAR UM PLUGIN
+            - DOCUMENTAR TEMPLATE PYTHON
+            - POSSIBILITAR EXECUTAVEL LINUX
+            - POSSIBILITAR SHEEL SCRIPT
         - LISTA DE PLUGINS
         - USANDO DOCKER NO CI/CD
         - LICENCA
@@ -38,10 +53,10 @@
             - FORM PARA CONFIGURACAO DE PLUGIN
             - AUTENTICACAO NO FRONTEND
             - PLUGINS
-                - REGEX NO CODIGO FONTE
+                - REGEX NO CODIGO FONTE (OK | acr-regex)
+                - SONAR ISSUE (OK | acr-sonar)
+                - REGEX PARA TITULO DE MERGE (OK | acr-regex)
                 - BRANCH DIFERENTE
-                - SONAR ISSUE
-                - REGEX PARA TITULO DE MERGE
                 - INCLUDES NAO USADOS C++
                 - IDENTACAO USANDO UNSCRUSIFY
                 - REGEX PARA NOME DE ARQUIVO
