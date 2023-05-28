@@ -2,6 +2,25 @@
     - RESOLVER TODOS
     - ESCREVER UNIT TEST
     - DOCUMENTAR CODIGO FONTE
+    - DOCUMENTAR COMO USAR
+        - CRIAR IMAGEM DOCKER
+            - LINUX
+            - INSTAR O PYTHON
+            - BAIXA O PROJEOT
+                - BRANCH LTS
+            - DEIXA AS PASTAS PARA CONFIGURAR EXTENSION
+                - /extensions
+                - /configs
+        - PROJETO QUE VAI USAR
+            - PROJETO NO GITLAB
+                - LISTA DE REPOSITORIOS EXTENSIONS USANDO O META-GIT
+                - PASTA CONFIGS
+            - DOCKER QUE HERDA DO PRIMEIRO DOCKER
+            - BAIXA ESSE PROJETO DE CONFIG
+                - COPIA PASTA CONFIG PARA O LUGAR CERTO
+                    - AQUI TALVEZ SEJA MELHOR COPIAR SO NA HORA DE EXECUTAR, PARA NAO EXPOR AS CONFIGS
+                - BAIXA OS PROJETOS META E COPIA PARA O LUGAR CERTO
+                - BUSSCA TODOS OS requirements.txt E EXECUTA O PIP INSTALL
     - DOCUMENTAR README.md
         - O QUE É
         - REQUISITOS
