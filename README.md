@@ -4,6 +4,7 @@
     - DOCUMENTAR CODIGO FONTE (EM INGLES)
     - ESCREVER CODIGO EM INGLES
     - REVISAR PARA JSON SEM SER camelCase
+    - REVISAR PLUGINS PARA TER CONFIG SE COMENTA TUDO OU SO NOVOS
     - PASSAR DADOS JSON DO GIT PARA O PLUGIN
         - PASSAR TAMBEM O TIPO
             - GITLAB
@@ -59,12 +60,17 @@
             - AUTENTICACAO NO FRONTEND
             - PLUGINS
                 - REGEX NO CODIGO FONTE (OK | acr-regex)
+                    - DOCUMENTAR README.md
                 - SONAR ISSUE (OK | acr-sonar)
+                    - DOCUMENTAR README.md
                 - REGEX PARA TITULO DE MERGE (OK | acr-regex)
+                    - DOCUMENTAR README.md
                 - BRANCH DIFERENTE  (OK | acr-branch)
+                    - DOCUMENTAR README.md
                 - PADRAO DE LOG INCORRETO (OK | acr-logs-qt)
-                - INCLUDES NAO USADOS C++
+                    - DOCUMENTAR README.md
                 - IDENTACAO USANDO UNSCRUSIFY
+                - INCLUDES NAO USADOS C++
                 - REGEX PARA NOME DE ARQUIVO
                 - OBRIGAR USO DO UNIQUE PTR
                 - USO DO AUTO
