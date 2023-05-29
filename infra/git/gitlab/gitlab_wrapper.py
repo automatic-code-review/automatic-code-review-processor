@@ -34,7 +34,9 @@ class GitLabWrapper(GitWrapper):
 
     def get_threads_by_merge_request(self, id_project, id_merge_request):
         merge_request = self.gitlab_api.projects.get(id_project).mergerequests.get(id_merge_request)
-        threads = merge_request.discussions.list()
+        threads = merge_request.discussions.list(
+            get_all=True,
+        )
         return threads
 
     def resolve_merge_request_thread(self, id_thread, id_project, merge_request_id):

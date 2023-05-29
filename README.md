@@ -3,6 +3,7 @@
     - ESCREVER UNIT TEST
     - DOCUMENTAR CODIGO FONTE (EM INGLES)
     - ESCREVER CODIGO EM INGLES
+    - REVISAR PARA JSON SEM SER camelCase
     - PASSAR DADOS JSON DO GIT PARA O PLUGIN
         - PASSAR TAMBEM O TIPO
             - GITLAB
@@ -61,6 +62,7 @@
                 - SONAR ISSUE (OK | acr-sonar)
                 - REGEX PARA TITULO DE MERGE (OK | acr-regex)
                 - BRANCH DIFERENTE  (OK | acr-branch)
+                - PADRAO DE LOG INCORRETO (OK | acr-logs-qt)
                 - INCLUDES NAO USADOS C++
                 - IDENTACAO USANDO UNSCRUSIFY
                 - REGEX PARA NOME DE ARQUIVO
