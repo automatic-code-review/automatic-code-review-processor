@@ -1,6 +1,5 @@
 import argparse
 import os
-import sys
 
 from app.processor import workspace, review, publish
 from infra.git.gitenum import GitEnum
@@ -9,7 +8,7 @@ exit_code_error = -1
 exit_code_success = 0
 
 
-def main():
+def execute():
     parser = argparse.ArgumentParser()
     parser.add_argument("--GIT_TYPE", help="Informe ase é GIT_HUB ou GIT_LAB")
     parser.add_argument("--GIT_URL", help="Informe a URL do GIT")
@@ -63,8 +62,4 @@ def main():
     else:
         exit_code = exit_code_success
 
-    sys.exit(exit_code)
-
-
-if __name__ == "__main__":
-    main()
+    return exit_code
