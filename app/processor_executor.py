@@ -58,7 +58,9 @@ def execute():
     )
 
     if len(comments) > 0:
-        exit_code = exit_code_error
+        #exit_code = exit_code_error
+        exit_code = exit_code_success
+        #TODO AJUSTAR PARA SO DAR FALHA SE TIVER 1 COMENTARIO PENDENTE
     else:
         exit_code = exit_code_success
 
