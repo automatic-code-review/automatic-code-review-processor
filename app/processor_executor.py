@@ -47,7 +47,7 @@ def execute():
         }
     )
 
-    publish.publish(
+    qt_pending_comment = publish.publish(
         comments=comments,
         id_project=args.GIT_PROJECT_ID,
         id_merge_request=args.GIT_MERGE_REQUEST_ID,
@@ -57,10 +57,8 @@ def execute():
         git_user=args.GIT_USER,
     )
 
-    if len(comments) > 0:
-        #exit_code = exit_code_error
-        exit_code = exit_code_success
-        #TODO AJUSTAR PARA SO DAR FALHA SE TIVER 1 COMENTARIO PENDENTE
+    if qt_pending_comment > 0:
+        exit_code = exit_code_error
     else:
         exit_code = exit_code_success
 
