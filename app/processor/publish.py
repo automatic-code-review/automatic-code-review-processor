@@ -52,10 +52,11 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
                     f'[MESSAGE] {message}'
                 )
                 comment['found'] = True
+                comment['resolved'] = note['resolved']
                 found = True
                 break
 
-        if not found:
+        if not found and not note['resolved']:
             print(f'automatic-code-review::publish - resolve thread [THREAD_ID] {thread.id} [MESSAGE] {message}')
 
             git.resolve_merge_request_thread(
@@ -64,8 +65,11 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
                 merge_request_id=id_merge_request,
             )
 
+    qt_pending_comment = 0
+
     for comment in comments:
         if 'found' not in comment or not comment['found']:
+            qt_pending_comment += 1
             comment_id = comment['id']
             comment_msg = comment['comment']
 
@@ -82,7 +86,11 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
                 id_project=id_project,
                 id_merge_request=id_merge_request,
             )
+        elif 'resolved' not in comment or not comment['resolved']:
+            qt_pending_comment += 1
 
     # TODO ADICIONAR OU REMOVER UPVOTED AND APPROVED
 
     print('automatic-code-review::publish - end')
+
+    return qt_pending_comment
