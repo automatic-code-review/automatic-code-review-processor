@@ -36,15 +36,7 @@ def execute():
         path_target=path_target,
         path_source=path_source,
         path_resources=path_resources,
-        merge={
-            'title': merge.title,
-            'branch': {
-                'target': merge.target_branch,
-                'source': merge.source_branch,
-            },
-            "project_id": args.GIT_PROJECT_ID,
-            "merge_request_id": args.GIT_MERGE_REQUEST_ID,
-        }
+        merge=merge,
     )
 
     qt_pending_comment = publish.publish(

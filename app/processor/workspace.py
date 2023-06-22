@@ -63,9 +63,20 @@ def setup(
         git=git,
     )
 
+    merge_json = {
+        'title': merge_request.title,
+        'changes': changes,
+        'branch': {
+            'target': merge_request.target_branch,
+            'source': merge_request.source_branch,
+        },
+        "project_id": id_project_target,
+        "merge_request_id": id_merge_request
+    }
+
     print('automatic-code-review::setup - end')
 
-    return path_target, path_source, merge_request
+    return path_target, path_source, merge_json
 
 
 def __setup(
