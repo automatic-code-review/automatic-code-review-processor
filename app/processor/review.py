@@ -21,6 +21,37 @@ def __verify_unique_id(extension_name, comments):
         ids.append(current_id)
 
 
+def __comment_and_snipset(comment, path):
+    comment_str = comment['comment']
+
+    if 'position' in comment:
+        position = comment['position']
+        path = path + "/" + position['path']
+
+        lines = []
+
+        with open(path, 'r') as file:
+            for line in file:
+                lines.append(line)
+
+        start = position['startInLine']
+        end = position['endInLine']
+        type_snipset = ''
+
+        if 'language' in position:
+            type_snipset = position['language']
+
+        snipset = ''.join(lines[start - 1:end])
+        comment_str = f"""{comment_str}
+
+```{type_snipset}
+{snipset}
+```
+"""
+
+    return comment_str
+
+
 def review(path_source, path_target, path_resources, merge):
     print('automatic-code-review::review - start')
 
@@ -66,6 +97,7 @@ def review(path_source, path_target, path_resources, merge):
                 for comment in comments_by_extension:
                     comment_id = comment['id']
                     comment['id'] = f"{extension_name}:{comment_id}"
+                    comment['comment'] = __comment_and_snipset(comment, path_source)
                     comments.append(comment)
 
             print(f'automatic-code-review::review - {extension_name} end')
