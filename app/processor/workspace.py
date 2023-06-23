@@ -64,6 +64,7 @@ def setup(
     )
 
     merge_json = {
+        'git_type': git_enum.name,
         'title': merge_request.title,
         'changes': changes,
         'branch': {
