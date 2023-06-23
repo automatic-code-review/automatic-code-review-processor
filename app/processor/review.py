@@ -3,6 +3,24 @@ import os
 import subprocess
 
 
+class UniqueException(Exception):
+    pass
+
+
+def __verify_unique_id(extension_name, comments):
+    ids = []
+
+    for comment in comments:
+        current_id = comment['id']
+
+        if current_id in ids:
+            raise UniqueException(
+                f"The extension '{extension_name}' returned 2 comments with the same id: '{current_id}'"
+            )
+
+        ids.append(current_id)
+
+
 def review(path_source, path_target, path_resources, merge):
     print('automatic-code-review::review - start')
 
@@ -42,6 +60,8 @@ def review(path_source, path_target, path_resources, merge):
                 qt_comments = len(comments_by_extension)
 
                 print(f'automatic-code-review::review - {extension_name} [QT_COMMENTS] {qt_comments}')
+
+                __verify_unique_id(extension_name, comments_by_extension)
 
                 for comment in comments_by_extension:
                     comment_id = comment['id']
