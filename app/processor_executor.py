@@ -20,7 +20,7 @@ def execute():
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
 
-    path_resources = os.path.dirname(os.path.abspath(__file__)) + "/../resources"
+    path_resources = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../resources")
 
     path_target, path_source, merge = workspace.setup(
         git_url=args.GIT_URL,
