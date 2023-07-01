@@ -67,6 +67,7 @@ def setup(
         'git_type': git_enum.name,
         'title': merge_request.title,
         'changes': changes,
+        'assignee': merge_request.assignee,
         'branch': {
             'target': merge_request.target_branch,
             'source': merge_request.source_branch,
