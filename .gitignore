@@ -11,6 +11,7 @@
 
 resources/output/*
 resources/configs/*
+resources/disabled/*
 resources/workspace/*
 resources/extensions/*
 
