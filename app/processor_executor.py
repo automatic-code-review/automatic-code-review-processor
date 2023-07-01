@@ -16,6 +16,7 @@ def execute():
     parser.add_argument("--GIT_TOKEN", help="Informe o token")
     parser.add_argument("--GIT_PROJECT_ID", help="Informe o id do projeto")
     parser.add_argument("--GIT_MERGE_REQUEST_ID", help="Informe o id do merge request")
+    parser.add_argument("--STAGE", help="Informe o stage da execucao", default="default")
 
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
@@ -37,6 +38,7 @@ def execute():
         path_source=path_source,
         path_resources=path_resources,
         merge=merge,
+        stage=args.STAGE,
     )
 
     qt_pending_comment = publish.publish(

@@ -52,7 +52,7 @@ def __comment_and_snipset(comment, path):
     return comment_str
 
 
-def review(path_source, path_target, path_resources, merge):
+def review(path_source, path_target, path_resources, merge, stage):
     print('automatic-code-review::review - start')
 
     path_output = path_resources + "/output"
@@ -64,6 +64,9 @@ def review(path_source, path_target, path_resources, merge):
         path_extension = os.path.join(path_extensions, extension_name)
 
         if os.path.isdir(path_extension):
+            if not __verify_stage(path_resources, extension_name, stage):
+                continue
+
             print(f'automatic-code-review::review - {extension_name} start')
 
             path_output_data = path_output + "/" + extension_name + "_data.json"
@@ -105,6 +108,26 @@ def review(path_source, path_target, path_resources, merge):
     print('automatic-code-review::review - end')
 
     return comments
+
+
+def __verify_stage(path_resources, extension, stage):
+    path_config = path_resources + "/configs/" + extension + "/config.json"
+
+    with open(path_config, 'r') as arquivo:
+        config = json.load(arquivo)
+
+    if 'stage' in config:
+        extension_stage = config['stage']
+    else:
+        extension_stage = 'default'
+
+    if stage != extension_stage:
+        print(
+            f'automatic-code-review::review - Skipando extensao {extension} porque nao pertence ao stage atual. '
+            f'Stage atual: {stage}. Stage da extensao: {extension_stage}')
+        return False
+
+    return True
 
 
 def __write_config(
