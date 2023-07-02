@@ -21,10 +21,17 @@ def __verify_unique_id(extension_name, comments):
         ids.append(current_id)
 
 
+def __get_or_default(obj, name, default):
+    if name in obj:
+        return obj[name]
+
+    return default
+
+
 def __comment_and_snipset(comment, path):
     comment_str = comment['comment']
 
-    if 'position' in comment:
+    if 'position' in comment and __get_or_default(comment['position'], 'snipset', True):
         position = comment['position']
         path = path + "/" + position['path']
 
