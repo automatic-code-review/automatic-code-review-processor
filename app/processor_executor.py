@@ -1,7 +1,8 @@
 import argparse
+import json
 import os
 
-from app.processor import workspace, review, publish
+from app.processor import workspace, review, publish, webhook
 from infra.git.gitenum import GitEnum
 
 exit_code_error = -1
@@ -23,6 +24,9 @@ def execute():
 
     path_resources = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../resources")
 
+    with open(path_resources + "/config.json", 'r') as content:
+        config = json.load(content)
+
     path_target, path_source, merge = workspace.setup(
         git_url=args.GIT_URL,
         git_user=args.GIT_USER,
@@ -41,7 +45,7 @@ def execute():
         stage=args.STAGE,
     )
 
-    qt_pending_comment = publish.publish(
+    qt_pending_comment, comments_added = publish.publish(
         comments=comments,
         id_project=args.GIT_PROJECT_ID,
         id_merge_request=args.GIT_MERGE_REQUEST_ID,
@@ -51,7 +55,13 @@ def execute():
         git_user=args.GIT_USER,
     )
 
-    if qt_pending_comment > 0:
+    webhook_add_comment = webhook.add_comment(webhooks=config['webhooks'], comments=comments_added, merge=merge)
+
+    print(f'automatic-code-review::execute - finish '
+          f'[QT_PEDING_COMMENT] {qt_pending_comment} '
+          f'[WEBHOOK_ADD_COMMENT] {webhook_add_comment}')
+
+    if qt_pending_comment > 0 or not webhook_add_comment:
         exit_code = exit_code_error
     else:
         exit_code = exit_code_success

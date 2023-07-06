@@ -106,8 +106,11 @@ def review(path_source, path_target, path_resources, merge, stage):
 
                 for comment in comments_by_extension:
                     comment_id = comment['id']
+
+                    comment['type'] = extension_name
                     comment['id'] = f"{extension_name}:{comment_id}"
                     comment['comment'] = __comment_and_snipset(comment, path_source)
+
                     comments.append(comment)
 
             print(f'automatic-code-review::review - {extension_name} end')

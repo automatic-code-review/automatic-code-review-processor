@@ -68,6 +68,9 @@ def setup(
         'title': merge_request.title,
         'changes': changes,
         'assignee': merge_request.assignee,
+        'author': merge_request.author['username'],
+        'web_url': merge_request.web_url,
+        'created_at': merge_request.created_at,
         'branch': {
             'target': merge_request.target_branch,
             'source': merge_request.source_branch,

@@ -9,6 +9,8 @@
 
 # Runtime
 
+resources/config.json
+
 resources/output/*
 resources/configs/*
 resources/disabled/*

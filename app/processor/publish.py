@@ -66,6 +66,7 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
             )
 
     qt_pending_comment = 0
+    comments_added = []
 
     for comment in comments:
         if 'found' not in comment or not comment['found']:
@@ -81,11 +82,17 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
 
             print(f'automatic-code-review::publish add new comment [COMMENT] {comment_final}')
 
-            git.create_merge_request_thread(
+            discussion = git.create_merge_request_thread(
                 comment=comment_final,
                 id_project=id_project,
                 id_merge_request=id_merge_request,
             )
+            comments_added.append({
+                'comment': comment_final,
+                'type': comment['type'],
+                'web_url': "#note_" + str(discussion.attributes['notes'][0]['id']),
+                'id': discussion.id
+            })
         elif 'resolved' not in comment or not comment['resolved']:
             qt_pending_comment += 1
 
@@ -93,4 +100,4 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
 
     print('automatic-code-review::publish - end')
 
-    return qt_pending_comment
+    return qt_pending_comment, comments_added
