@@ -1,3 +1,5 @@
+from gitlab import GitlabCreateError
+
 from infra.git import git_wrapper_factory
 
 
@@ -8,6 +10,12 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
         git_enum=git_enum,
         git_url=git_url,
         git_token=git_token,
+    )
+
+    print('automatic-code-review::publish - get versions')
+    versions = git.get_versions_by_merge_request(
+        id_project=id_project,
+        id_merge_request=id_merge_request,
     )
 
     print('automatic-code-review::publish - get threads')
@@ -80,12 +88,26 @@ ___
 
 AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
 
+            if 'position' in comment:
+                position = {
+                    "base_sha": versions[0]['base_commit_sha'],
+                    "start_sha": versions[0]['start_commit_sha'],
+                    "head_sha": versions[0]['head_commit_sha'],
+                    "position_type": "text",
+                    "new_path": comment['position']['path'],
+                    "new_line": comment['position']['startInLine']
+                }
+            else:
+                position = None
+
             print(f'automatic-code-review::publish add new comment [COMMENT] {comment_final}')
 
-            discussion = git.create_merge_request_thread(
+            discussion = __create_discussion(
                 comment=comment_final,
                 id_project=id_project,
                 id_merge_request=id_merge_request,
+                position=position,
+                git=git,
             )
             comments_added.append({
                 'comment': comment_final,
@@ -101,3 +123,27 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
     print('automatic-code-review::publish - end')
 
     return qt_pending_comment, comments_added
+
+
+def __create_discussion(comment, id_project, id_merge_request, position, git):
+    try:
+        return git.create_merge_request_thread(
+            comment=comment,
+            id_project=id_project,
+            id_merge_request=id_merge_request,
+            position=position,
+        )
+
+    except GitlabCreateError as e:
+        if e.response_code == 400:
+            print('automatic-code-review::create_discussion - fail add, retry without position')
+
+            return git.create_merge_request_thread(
+                comment=comment,
+                id_project=id_project,
+                id_merge_request=id_merge_request,
+                position=None,
+            )
+
+        else:
+            raise e

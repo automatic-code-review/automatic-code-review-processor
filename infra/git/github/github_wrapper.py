@@ -28,5 +28,8 @@ class GitHubWrapper(GitWrapper):
     def resolve_merge_request_thread(self, id_thread, id_project, merge_request_id):
         pass
 
-    def create_merge_request_thread(self, comment, id_project, id_merge_request):
+    def create_merge_request_thread(self, comment, id_project, id_merge_request, position):
+        pass
+
+    def get_versions_by_merge_request(self, id_project, id_merge_request):
         pass

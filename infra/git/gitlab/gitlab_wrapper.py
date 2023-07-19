@@ -3,6 +3,7 @@ import shutil
 import subprocess
 
 import gitlab
+import requests
 
 from infra.git.git_wrapper import GitWrapper
 
@@ -10,6 +11,8 @@ from infra.git.git_wrapper import GitWrapper
 class GitLabWrapper(GitWrapper):
 
     def __init__(self, git_url, git_token):
+        self.git_url = git_url
+        self.git_token = git_token
         self.gitlab_api = gitlab.Gitlab(git_url, private_token=git_token)
 
     def get_http_url_by_project_id(self, id_project):
@@ -46,7 +49,25 @@ class GitLabWrapper(GitWrapper):
         discussion.resolved = True
         discussion.save()
 
-    def create_merge_request_thread(self, comment, id_project, id_merge_request):
+    def create_merge_request_thread(self, comment, id_project, id_merge_request, position):
         merge_request = self.gitlab_api.projects.get(id_project).mergerequests.get(id_merge_request)
-        discussion = merge_request.discussions.create({'body': comment})
+
+        obj_to_add = {
+            'body': comment
+        }
+
+        if position is not None:
+            obj_to_add['position'] = position
+
+        discussion = merge_request.discussions.create(obj_to_add)
+
         return discussion
+
+    def get_versions_by_merge_request(self, id_project, id_merge_request):
+        url = f'{self.git_url}/api/v4/projects/{id_project}/merge_requests/{id_merge_request}/versions'
+        headers = {'PRIVATE-TOKEN': self.git_token}
+
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
