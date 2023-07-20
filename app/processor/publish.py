@@ -31,7 +31,10 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
         message_id = None
         note = thread.attributes['notes'][0]
 
-        if not note['author']['username'] == git_user or not note['type'] == 'DiscussionNote':
+        if not note['author']['username'] == git_user:
+            continue
+
+        if not note['type'] == 'DiscussionNote' and not note['type'] == 'DiffNote':
             continue
 
         message = note['body']
