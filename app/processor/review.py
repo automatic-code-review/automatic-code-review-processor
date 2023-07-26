@@ -14,6 +14,7 @@ def __verify_unique_id(extension_name, comments):
         current_id = comment['id']
 
         if current_id in ids:
+            print('automatic-code-review::review - ' + comment['comment'])
             raise UniqueException(
                 f"The extension '{extension_name}' returned 2 comments with the same id: '{current_id}'"
             )
