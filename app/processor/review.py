@@ -77,6 +77,9 @@ def review(path_source, path_target, path_resources, merge, stage):
 
             print(f'automatic-code-review::review - {extension_name} start')
 
+            if not __can_review_current_merge(extension=extension_name, path_resources=path_resources, merge=merge):
+                continue
+
             path_output_data = path_output + "/" + extension_name + "_data.json"
             print(f'automatic-code-review::review - {extension_name} write config [OUTPUT] {path_output_data}')
 
@@ -137,6 +140,25 @@ def __verify_stage(path_resources, extension, stage):
             f'automatic-code-review::review - Skipando extensao {extension} porque nao pertence ao stage atual. '
             f'Stage atual: {stage}. Stage da extensao: {extension_stage}')
         return False
+
+    return True
+
+
+def __can_review_current_merge(extension, path_resources, merge):
+    path_config = path_resources + "/configs/" + extension + "/config.json"
+
+    with open(path_config, 'r') as arquivo:
+        config = json.load(arquivo)
+
+        if 'createdBy' in config:
+            author = merge['author']
+            created_by = config['createdBy']
+
+            if author not in created_by:
+                authors_required = ', '.join(created_by)
+                print(f'automatic-code-review::review - Skipando extensao {extension} porque merge não atende o filtro '
+                      f'de createdBy. Author atual: {author}. Author requerido: {authors_required}')
+                return False
 
     return True
 
