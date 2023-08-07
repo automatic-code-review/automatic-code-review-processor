@@ -11,6 +11,7 @@ def setup(
         id_merge_request,
         path_resources,
         git_enum,
+        path_source,
 ):
     print('automatic-code-review::setup - start')
 
@@ -34,7 +35,6 @@ def setup(
 
     path = path_resources + "/workspace"
     path_target = path + "/repo_target"
-    path_source = path + "/repo_source"
 
     print('automatic-code-review::setup - setup target repository')
     __setup(
@@ -48,20 +48,23 @@ def setup(
         git=git,
     )
 
-    print('automatic-code-review::setup - setup source repository')
-    __setup(
-        path=path_source,
-        changes=changes,
-        field='new_path',
-        branch=merge_request.source_branch,
-        id_project=git.get_id_project_source_by_id_project_target(
-            id_project_target=id_project_target,
-            id_merge_request=id_merge_request,
-        ),
-        git_user=git_user,
-        git_token=git_token,
-        git=git,
-    )
+    if len(path_source) == 0:
+        path_source = path + "/repo_source"
+
+        print('automatic-code-review::setup - setup source repository')
+        __setup(
+            path=path_source,
+            changes=changes,
+            field='new_path',
+            branch=merge_request.source_branch,
+            id_project=git.get_id_project_source_by_id_project_target(
+                id_project_target=id_project_target,
+                id_merge_request=id_merge_request,
+            ),
+            git_user=git_user,
+            git_token=git_token,
+            git=git,
+        )
 
     merge_json = {
         'git_type': git_enum.name,

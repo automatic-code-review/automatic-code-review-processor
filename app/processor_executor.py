@@ -18,6 +18,7 @@ def execute():
     parser.add_argument("--GIT_PROJECT_ID", help="Informe o id do projeto")
     parser.add_argument("--GIT_MERGE_REQUEST_ID", help="Informe o id do merge request")
     parser.add_argument("--STAGE", help="Informe o stage da execucao", default="default")
+    parser.add_argument("--SOURCE_PATH", help="Informe o source path, caso o mesmo já exista", default="")
 
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
@@ -35,6 +36,7 @@ def execute():
         id_merge_request=args.GIT_MERGE_REQUEST_ID,
         git_enum=git_enum,
         path_resources=path_resources,
+        path_source=args.SOURCE_PATH,
     )
 
     comments = review.review(
