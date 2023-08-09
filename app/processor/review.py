@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import subprocess
@@ -96,7 +97,16 @@ def review(path_source, path_target, path_resources, merge, stage):
             path_python_app = path_extension + "/app.py"
             print(f'automatic-code-review::review - {extension_name} run start [APP] {path_python_app}')
 
-            subprocess.run(['python3.10', path_python_app])
+            retorno = subprocess.run(['python3.10', path_python_app])
+
+            if retorno.returncode != 0:
+                print(f'automatic-code-review::review - {extension_name} fail')
+                comments.append({
+                    'id': __generate_md5(f"automatic-code-review::review::{extension_name}::fail"),
+                    'comment': f"Failed to run {extension_name} extension, contact administrator",
+                    'type': extension_name
+                })
+                continue
 
             print(f'automatic-code-review::review - {extension_name} run end, start read output')
 
@@ -122,6 +132,13 @@ def review(path_source, path_target, path_resources, merge, stage):
     print('automatic-code-review::review - end')
 
     return comments
+
+
+def __generate_md5(string):
+    md5_hash = hashlib.md5()
+    md5_hash.update(string.encode('utf-8'))
+
+    return md5_hash.hexdigest()
 
 
 def __verify_stage(path_resources, extension, stage):
