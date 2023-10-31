@@ -121,6 +121,7 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
                 print(f'automatic-code-review::review - {extension_name} [QT_COMMENTS] {qt_comments}')
 
+                # TODO CRIAR UM COMENTARIO EM VEZ DE LANÇAR EXCEPTION, E NAO ADICIONAR O COMENTARIO NO MERGE
                 __verify_unique_id(extension_name, comments_by_extension)
 
                 for comment in comments_by_extension:
