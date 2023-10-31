@@ -45,6 +45,7 @@ def execute():
         path_resources=path_resources,
         merge=merge,
         stage=args.STAGE,
+        config_global=config,
     )
 
     qt_pending_comment, comments_added = publish.publish(
