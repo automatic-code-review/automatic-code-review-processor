@@ -139,7 +139,7 @@ def __create_discussion(comment, id_project, id_merge_request, position, git):
 
     except GitlabCreateError as e:
         if e.response_code == 400:
-            print('automatic-code-review::create_discussion - fail add, retry without position')
+            print('automatic-code-review::create_discussion - fail add (error code 400), retry without position')
 
             return git.create_merge_request_thread(
                 comment=comment,
@@ -147,6 +147,14 @@ def __create_discussion(comment, id_project, id_merge_request, position, git):
                 id_merge_request=id_merge_request,
                 position=None,
             )
+        elif e.response_code == 500 and position is not None:
+            print('automatic-code-review::create_discussion - fail add (error code 500), retry without position')
 
+            return git.create_merge_request_thread(
+                comment=comment,
+                id_project=id_project,
+                id_merge_request=id_merge_request,
+                position=None,
+            )
         else:
             raise e
