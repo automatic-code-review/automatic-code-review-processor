@@ -39,7 +39,7 @@ def execute():
         path_source=args.SOURCE_PATH,
     )
 
-    comments = review.review(
+    comments, extensions = review.review(
         path_target=path_target,
         path_source=path_source,
         path_resources=path_resources,
@@ -56,6 +56,7 @@ def execute():
         git_url=args.GIT_URL,
         git_token=args.GIT_TOKEN,
         git_user=args.GIT_USER,
+        extensions=extensions,
     )
 
     webhook_add_comment = webhook.add_comment(webhooks=config['webhooks'], comments=comments_added, merge=merge)

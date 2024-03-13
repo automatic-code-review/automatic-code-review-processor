@@ -73,6 +73,7 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
     path_extensions = path_resources + "/extensions"
 
     comments = []
+    extensions = []
 
     for extension_name in os.listdir(path_extensions):
         path_extension = os.path.join(path_extensions, extension_name)
@@ -88,6 +89,8 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
             path_output_data = path_output + "/" + extension_name + "_data.json"
             print(f'automatic-code-review::review - {extension_name} write config [OUTPUT] {path_output_data}')
+
+            extensions.append(extension_name)
 
             __write_config(
                 extension=extension_name,
@@ -106,8 +109,9 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
             if retorno.returncode != 0:
                 print(f'automatic-code-review::review - {extension_name} fail')
+                comment_id = __generate_md5(f"automatic-code-review::review::{extension_name}::fail")
                 comments.append({
-                    'id': __generate_md5(f"automatic-code-review::review::{extension_name}::fail"),
+                    'id': f"{extension_name}:{comment_id}",
                     'comment': f"Failed to run {extension_name} extension, contact administrator",
                     'type': extension_name
                 })
@@ -137,7 +141,7 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
     print('automatic-code-review::review - end')
 
-    return comments
+    return comments, extensions
 
 
 def __generate_md5(string):

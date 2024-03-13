@@ -3,7 +3,7 @@ from gitlab import GitlabCreateError
 from infra.git import git_wrapper_factory
 
 
-def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token, git_user):
+def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token, git_user, extensions):
     print('automatic-code-review::publish - start')
 
     git = git_wrapper_factory.create(
@@ -69,6 +69,10 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
 
         if not found and not note['resolved']:
             print(f'automatic-code-review::publish - resolve thread [THREAD_ID] {thread.id} [MESSAGE] {message}')
+
+            extension = message_id.split(":")[0]
+            if extension not in extensions:
+                continue
 
             git.resolve_merge_request_thread(
                 id_thread=thread.id,
