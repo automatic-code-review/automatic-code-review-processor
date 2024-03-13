@@ -68,11 +68,11 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
                 break
 
         if not found and not note['resolved']:
-            print(f'automatic-code-review::publish - resolve thread [THREAD_ID] {thread.id} [MESSAGE] {message}')
-
             extension = message_id.split(":")[0]
             if extension not in extensions:
                 continue
+
+            print(f'automatic-code-review::publish - resolve thread [THREAD_ID] {thread.id} [MESSAGE] {message}')
 
             git.resolve_merge_request_thread(
                 id_thread=thread.id,
