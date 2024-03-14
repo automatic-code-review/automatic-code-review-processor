@@ -92,7 +92,7 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
             extensions.append(extension_name)
 
-            __write_config(
+            config = __write_config(
                 extension=extension_name,
                 path_resources=path_resources,
                 path_extensions=path_extensions,
@@ -102,12 +102,9 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
                 merge=merge,
             )
 
-            path_python_app = path_extension + "/app.py"
-            print(f'automatic-code-review::review - {extension_name} run start [APP] {path_python_app}')
+            retorno = __exec_extension(extension_name, path_extension, config["language"], config["path"])
 
-            retorno = subprocess.run(['python3.10', path_python_app])
-
-            if retorno.returncode != 0:
+            if retorno != 0:
                 print(f'automatic-code-review::review - {extension_name} fail')
                 comment_id = __generate_md5(f"automatic-code-review::review::{extension_name}::fail")
                 comments.append({
@@ -142,6 +139,20 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
     print('automatic-code-review::review - end')
 
     return comments, extensions
+
+
+def __exec_extension(extension_name, extension_path, extension_language, path_config):
+    if "JAVA" in extension_language:
+        java_jar = f"{extension_path}/{extension_name}.jar"
+        print(f'automatic-code-review::review - {extension_name} run start [APP_JAVA] {java_jar}')
+        retorno = subprocess.run(["java", "-jar", java_jar, f"--CONFIG_PATH={path_config}"])
+
+    else:
+        path_python_app = extension_path + "/app.py"
+        print(f'automatic-code-review::review - {extension_name} run start [APP_PYTHON] {path_python_app}')
+        retorno = subprocess.run(['python3.10', path_python_app])
+
+    return retorno.returncode
 
 
 def __generate_md5(string):
@@ -204,6 +215,7 @@ def __write_config(
 
     with open(path_config, 'r') as arquivo:
         config = json.load(arquivo)
+        extension_language = __get_or_default(config, 'language', 'python')
         config['path_target'] = path_target
         config['path_source'] = path_source
         config['path_output'] = path_output
@@ -211,3 +223,8 @@ def __write_config(
 
     with open(path_config_final, 'w') as arquivo:
         json.dump(config, arquivo, indent=True)
+
+    return {
+        "path": path_config_final,
+        "language": extension_language
+    }
