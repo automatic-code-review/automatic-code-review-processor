@@ -66,6 +66,8 @@ def setup(
             git=git,
         )
 
+    project = git.get_project_by_id_project(id_project_target)
+
     merge_json = {
         'git_type': git_enum.name,
         'title': merge_request.title,
@@ -78,6 +80,7 @@ def setup(
             'target': merge_request.target_branch,
             'source': merge_request.source_branch,
         },
+        "project_name": project.name,
         "project_id": id_project_target,
         "merge_request_id": id_merge_request
     }

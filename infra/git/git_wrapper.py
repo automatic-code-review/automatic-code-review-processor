@@ -38,3 +38,7 @@ class GitWrapper(ABC):
     @abstractmethod
     def get_versions_by_merge_request(self, id_project, id_merge_request):
         pass
+
+    @abstractmethod
+    def get_project_by_id_project(self, id_project):
+        pass

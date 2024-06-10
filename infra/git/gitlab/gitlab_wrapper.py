@@ -71,3 +71,6 @@ class GitLabWrapper(GitWrapper):
         response.raise_for_status()
 
         return response.json()
+
+    def get_project_by_id_project(self, id_project):
+        return self.gitlab_api.projects.get(id_project)
