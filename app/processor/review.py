@@ -198,6 +198,16 @@ def __can_review_current_merge(extension, path_resources, merge):
                       f'de createdBy. Author atual: {author}. Author requerido: {authors_required}')
                 return False
 
+        if 'projects' in config:
+            project_name = merge['project_name']
+            projects = config['projects']
+
+            if project_name not in projects:
+                projects_required = ', '.join(projects)
+                print(f'automatic-code-review::review - Skipando extensao {extension} porque merge não atende o filtro '
+                      f'de projects. Project atual: {project_name}. Projeto requerido: {projects_required}')
+                return False
+
     return True
 
 
