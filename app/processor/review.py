@@ -67,7 +67,7 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
     if 'regexToSkip' in config_global and re.search(config_global['regexToSkip'], merge['title']):
         print('automatic-code-review::review - merge skip')
-        return []
+        return [], []
 
     path_output = path_resources + "/output"
     path_extensions = path_resources + "/extensions"
