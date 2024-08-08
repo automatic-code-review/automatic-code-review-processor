@@ -62,7 +62,12 @@ def execute():
         extensions=extensions,
     )
 
-    webhook_add_comment = webhook.add_comment(webhooks=config['webhooks'], comments=comments_added, merge=merge)
+    webhook_add_comment = webhook.add_comment(
+        workspace_name=config['workspaceName'],
+        webhooks=config['webhooks'],
+        comments=comments_added,
+        merge=merge,
+    )
 
     print(f'automatic-code-review::execute - finish '
           f'[QT_PEDING_COMMENT] {qt_pending_comment} '

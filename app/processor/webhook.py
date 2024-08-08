@@ -3,7 +3,7 @@ import json
 import requests
 
 
-def add_comment(webhooks, comments, merge):
+def add_comment(webhooks, comments, merge, workspace_name):
     comments_format = []
 
     web_url = merge['web_url']
@@ -24,6 +24,7 @@ def add_comment(webhooks, comments, merge):
             "dsAuthorUsername": merge['author'],
             "dhMerge": merge['created_at']
         },
+        "workspaceName": workspace_name,
         "comments": comments_format
     })
 
