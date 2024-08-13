@@ -74,3 +74,18 @@ class GitLabWrapper(GitWrapper):
 
     def get_project_by_id_project(self, id_project):
         return self.gitlab_api.projects.get(id_project)
+
+    def get_commits_behind(self, id_project_target, branch_target, id_project_source, branch_source):
+        project = self.gitlab_api.projects.get(id_project_target)
+        comparison = project.repository_compare(branch_target, branch_source, from_project_id=id_project_source)
+        commits_behind = []
+
+        for commit in comparison['commits']:
+            commits_behind.append({
+                "id": commit['id'],
+                "author_name": commit['author_name'],
+                "message": commit['message'],
+                "created_at": commit['created_at'],
+            })
+
+        return commits_behind

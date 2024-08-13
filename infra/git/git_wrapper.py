@@ -42,3 +42,7 @@ class GitWrapper(ABC):
     @abstractmethod
     def get_project_by_id_project(self, id_project):
         pass
+
+    @abstractmethod
+    def get_commits_behind(self, id_project_target, branch_target, id_project_source, branch_source):
+        pass

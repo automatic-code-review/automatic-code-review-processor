@@ -48,6 +48,11 @@ def setup(
         git=git,
     )
 
+    id_project_source = git.get_id_project_source_by_id_project_target(
+        id_project_target=id_project_target,
+        id_merge_request=id_merge_request,
+    )
+
     if len(path_source) == 0:
         path_source = path + "/repo_source"
 
@@ -57,16 +62,20 @@ def setup(
             changes=changes,
             field='new_path',
             branch=merge_request.source_branch,
-            id_project=git.get_id_project_source_by_id_project_target(
-                id_project_target=id_project_target,
-                id_merge_request=id_merge_request,
-            ),
+            id_project=id_project_source,
             git_user=git_user,
             git_token=git_token,
             git=git,
         )
 
     project = git.get_project_by_id_project(id_project_target)
+
+    commits_behind = git.get_commits_behind(
+        id_project_target=id_project_target,
+        branch_target=merge_request.target_branch,
+        id_project_source=id_project_source,
+        branch_source=merge_request.source_branch
+    )
 
     merge_json = {
         'git_type': git_enum.name,
@@ -80,6 +89,7 @@ def setup(
             'target': merge_request.target_branch,
             'source': merge_request.source_branch,
         },
+        'commits_behind': commits_behind,
         "project_name": project.name,
         "project_id": id_project_target,
         "merge_request_id": id_merge_request
