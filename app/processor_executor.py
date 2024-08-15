@@ -17,7 +17,6 @@ def execute():
     parser.add_argument("--GIT_USER", help="Informe o usuário")
     parser.add_argument("--GIT_TOKEN", help="Informe o token")
     parser.add_argument("--GIT_PROJECT_ID", help="Informe o id do projeto target")
-    parser.add_argument("--GIT_PROJECT_SOURCE_ID", help="Informe o id do projeto source")
     parser.add_argument("--GIT_MERGE_REQUEST_ID", help="Informe o id do merge request")
     parser.add_argument("--STAGE", help="Informe o stage da execucao", default="default")
     parser.add_argument("--SOURCE_PATH", help="Informe o source path, caso o mesmo já exista", default="")
@@ -26,9 +25,10 @@ def execute():
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
 
-    print(f'automatic-code-review::execute [EXTRA_ARGUS] {args.EXTRA_ARGS} ')
+    extra_args = __get_extra_argus(args.EXTRA_ARGS)
+    print(f'automatic-code-review::execute [EXTRA_ARGUS] {extra_args} ')
 
-    project_target_id = __get_project_target_id(args, git_enum)
+    project_target_id = __get_project_target_id(args, git_enum, extra_args)
     path_resources = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../resources")
 
     with open(path_resources + "/config.json", 'r') as content:
@@ -84,21 +84,33 @@ def execute():
     return exit_code
 
 
-def __get_project_target_id(args, git_enum):
-    project_target_id = args.GIT_PROJECT_ID
+def __get_extra_argus(extra_args):
+    extra_args = extra_args.split(";")
+    extra_args_final = {}
 
-    if project_target_id is None:
-        project_source_id = args.GIT_PROJECT_SOURCE_ID
-        git = git_wrapper_factory.create(
-            git_enum=git_enum,
-            git_url=args.GIT_URL,
-            git_token=args.GIT_TOKEN,
-        )
+    for extra_arg in extra_args:
+        extra_arg = extra_arg.split("=")
+        if len(extra_arg) == 2:
+            extra_args_final[extra_arg[0]] = extra_arg[1]
 
-        project = git.get_project_by_id_project(
-            id_project=project_source_id,
-        )
+    return extra_args_final
 
-        return project.forked_from_project['id']
 
-    return project_target_id
+def __get_project_target_id(args, git_enum, extra_args):
+    project_id = args.GIT_PROJECT_ID
+    is_upstream = 'IS_UPSTREAM' not in extra_args or extra_args['IS_UPSTREAM'] == 'true'
+
+    if is_upstream:
+        return project_id
+
+    git = git_wrapper_factory.create(
+        git_enum=git_enum,
+        git_url=args.GIT_URL,
+        git_token=args.GIT_TOKEN,
+    )
+
+    project = git.get_project_by_id_project(
+        id_project=project_id,
+    )
+
+    return project.forked_from_project['id']
