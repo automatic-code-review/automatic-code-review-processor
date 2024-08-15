@@ -21,9 +21,12 @@ def execute():
     parser.add_argument("--GIT_MERGE_REQUEST_ID", help="Informe o id do merge request")
     parser.add_argument("--STAGE", help="Informe o stage da execucao", default="default")
     parser.add_argument("--SOURCE_PATH", help="Informe o source path, caso o mesmo já exista", default="")
+    parser.add_argument("--EXTRA_ARGS", help="Extra args", default="")
 
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
+
+    print(f'automatic-code-review::execute [EXTRA_ARGUS] {args.EXTRA_ARGS} ')
 
     project_target_id = __get_project_target_id(args, git_enum)
     path_resources = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../resources")
