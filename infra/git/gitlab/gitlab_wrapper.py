@@ -76,6 +76,10 @@ class GitLabWrapper(GitWrapper):
         return self.gitlab_api.projects.get(id_project)
 
     def get_commits_behind(self, id_project_target, branch_target, id_project_source, branch_source):
+        # TODO SE FOR DIFERENTE TA DANDO PROBLEMA SE A BRANCH NAO EXISTIR, TALVEZ ESTEJA TROCADO
+        if branch_target != branch_source:
+            return []
+
         project = self.gitlab_api.projects.get(id_project_target)
         comparison = project.repository_compare(branch_target, branch_source, from_project_id=id_project_source)
         commits_behind = []
