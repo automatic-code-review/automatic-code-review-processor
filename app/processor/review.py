@@ -62,6 +62,38 @@ def __comment_and_snipset(comment, path):
     return comment_str
 
 
+def __get_extensions_to_run(path_extensions, path_resources, stage, merge):
+    extensions = []
+
+    for extension_name in os.listdir(path_extensions):
+        extension_patb = os.path.join(path_extensions, extension_name)
+
+        if os.path.isdir(extension_patb):
+            if not __verify_stage(path_resources, extension_name, stage):
+                continue
+
+            if not __can_review_current_merge(extension=extension_name, path_resources=path_resources, merge=merge):
+                continue
+
+            path_config = path_resources + "/configs/" + extension_name + "/config.json"
+
+            with open(path_config, 'r') as arquivo:
+                config = json.load(arquivo)
+
+            extension_order = None
+
+            if 'order' in config:
+                extension_order = config['order']
+
+            extensions.append({
+                "extension_name": extension_name,
+                "extension_path": extension_patb,
+                "extension_order": extension_order
+            })
+
+    return sorted(extensions, key=lambda obj: (obj["extension_order"] is None, obj["extension_order"]))
+
+
 def review(path_source, path_target, path_resources, merge, stage, config_global):
     print('automatic-code-review::review - start')
 
@@ -74,67 +106,61 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
     comments = []
     extensions = []
+    extensions_to_run = __get_extensions_to_run(path_extensions, path_resources, stage, merge)
 
-    for extension_name in os.listdir(path_extensions):
-        path_extension = os.path.join(path_extensions, extension_name)
+    for extension_to_run in extensions_to_run:
+        extension_name = extension_to_run['extension_name']
+        print(f'automatic-code-review::review - {extension_name} start')
 
-        if os.path.isdir(path_extension):
-            if not __verify_stage(path_resources, extension_name, stage):
-                continue
+        path_output_data = path_output + "/" + extension_name + "_data.json"
+        print(f'automatic-code-review::review - {extension_name} write config [OUTPUT] {path_output_data}')
 
-            print(f'automatic-code-review::review - {extension_name} start')
+        extensions.append(extension_name)
 
-            if not __can_review_current_merge(extension=extension_name, path_resources=path_resources, merge=merge):
-                continue
+        config = __write_config(
+            extension=extension_name,
+            path_resources=path_resources,
+            path_extensions=path_extensions,
+            path_target=path_target,
+            path_source=path_source,
+            path_output=path_output_data,
+            merge=merge,
+        )
 
-            path_output_data = path_output + "/" + extension_name + "_data.json"
-            print(f'automatic-code-review::review - {extension_name} write config [OUTPUT] {path_output_data}')
+        path_extension = extension_to_run['extension_path']
+        retorno = __exec_extension(extension_name, path_extension, config["language"], config["path"])
 
-            extensions.append(extension_name)
+        if retorno != 0:
+            print(f'automatic-code-review::review - {extension_name} fail')
+            comment_id = __generate_md5(f"automatic-code-review::review::{extension_name}::fail")
+            comments.append({
+                'id': f"{extension_name}:{comment_id}",
+                'comment': f"Failed to run {extension_name} extension, contact administrator",
+                'type': extension_name
+            })
+            continue
 
-            config = __write_config(
-                extension=extension_name,
-                path_resources=path_resources,
-                path_extensions=path_extensions,
-                path_target=path_target,
-                path_source=path_source,
-                path_output=path_output_data,
-                merge=merge,
-            )
+        print(f'automatic-code-review::review - {extension_name} run end, start read output')
 
-            retorno = __exec_extension(extension_name, path_extension, config["language"], config["path"])
+        with open(path_output_data, 'r') as arquivo:
+            comments_by_extension = json.load(arquivo)
+            qt_comments = len(comments_by_extension)
 
-            if retorno != 0:
-                print(f'automatic-code-review::review - {extension_name} fail')
-                comment_id = __generate_md5(f"automatic-code-review::review::{extension_name}::fail")
-                comments.append({
-                    'id': f"{extension_name}:{comment_id}",
-                    'comment': f"Failed to run {extension_name} extension, contact administrator",
-                    'type': extension_name
-                })
-                continue
+            print(f'automatic-code-review::review - {extension_name} [QT_COMMENTS] {qt_comments}')
 
-            print(f'automatic-code-review::review - {extension_name} run end, start read output')
+            # TODO CRIAR UM COMENTARIO EM VEZ DE LANÇAR EXCEPTION, E NAO ADICIONAR O COMENTARIO NO MERGE
+            __verify_unique_id(extension_name, comments_by_extension)
 
-            with open(path_output_data, 'r') as arquivo:
-                comments_by_extension = json.load(arquivo)
-                qt_comments = len(comments_by_extension)
+            for comment in comments_by_extension:
+                comment_id = comment['id']
 
-                print(f'automatic-code-review::review - {extension_name} [QT_COMMENTS] {qt_comments}')
+                comment['type'] = extension_name
+                comment['id'] = f"{extension_name}:{comment_id}"
+                comment['comment'] = __comment_and_snipset(comment, path_source)
 
-                # TODO CRIAR UM COMENTARIO EM VEZ DE LANÇAR EXCEPTION, E NAO ADICIONAR O COMENTARIO NO MERGE
-                __verify_unique_id(extension_name, comments_by_extension)
+                comments.append(comment)
 
-                for comment in comments_by_extension:
-                    comment_id = comment['id']
-
-                    comment['type'] = extension_name
-                    comment['id'] = f"{extension_name}:{comment_id}"
-                    comment['comment'] = __comment_and_snipset(comment, path_source)
-
-                    comments.append(comment)
-
-            print(f'automatic-code-review::review - {extension_name} end')
+        print(f'automatic-code-review::review - {extension_name} end')
 
     print('automatic-code-review::review - end')
 
