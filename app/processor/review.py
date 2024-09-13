@@ -147,8 +147,13 @@ def __exec_extension(extension_name, extension_path, extension_language, path_co
         print(f'automatic-code-review::review - {extension_name} run start [APP_JAVA] {java_jar}')
         retorno = subprocess.run(["java", "-jar", java_jar, f"--CONFIG_PATH={path_config}"])
 
+    elif "JAVASCRIPT" in extension_language:
+        path_javascript_app = f"{extension_path}/app.js"
+        print(f'automatic-code-review::review - {extension_name} run start [APP_JAVASCRIPT] {path_javascript_app}')
+        retorno = subprocess.run(["node", path_javascript_app])
+
     else:
-        path_python_app = extension_path + "/app.py"
+        path_python_app = f"{extension_path}/app.py"
         print(f'automatic-code-review::review - {extension_name} run start [APP_PYTHON] {path_python_app}')
         retorno = subprocess.run(['python3.10', path_python_app])
 
