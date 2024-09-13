@@ -162,6 +162,10 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
         print(f'automatic-code-review::review - {extension_name} end')
 
+        if qt_comments > 0 and "abortOnFail" in config and config["abortOnFail"]:
+            print(f'automatic-code-review::review - {extension_name} Abortando por ter retornado comentario')
+            break
+
     print('automatic-code-review::review - end')
 
     return comments, extensions
