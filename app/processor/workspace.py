@@ -68,6 +68,19 @@ def setup(
             git=git,
         )
 
+    print('automatic-code-review::setup - setup source repository v2')
+    path_source_v2 = path + "/repo_source_v2"
+    __setup(
+        path=path_source_v2,
+        changes=None,
+        field=None,
+        branch=merge_request.source_branch,
+        id_project=id_project_source,
+        git_user=git_user,
+        git_token=git_token,
+        git=git,
+    )
+
     project = git.get_project_by_id_project(id_project_target)
 
     commits_behind = git.get_commits_behind(
@@ -97,7 +110,7 @@ def setup(
 
     print('automatic-code-review::setup - end')
 
-    return path_target, path_source, merge_json
+    return path_target, path_source, merge_json, path_source_v2
 
 
 def __setup(
@@ -124,15 +137,16 @@ def __setup(
         path=path,
     )
 
-    __remove_files_not_in_changes(
-        path=path,
-        changes=changes,
-        field=field,
-    )
+    if changes is not None and field is not None:
+        __remove_files_not_in_changes(
+            path=path,
+            changes=changes,
+            field=field,
+        )
 
-    __remove_empty_dirs(
-        path=path,
-    )
+        __remove_empty_dirs(
+            path=path,
+        )
 
 
 def __get_http_with_auth(url, user, token):

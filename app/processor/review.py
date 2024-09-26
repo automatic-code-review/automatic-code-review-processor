@@ -94,7 +94,7 @@ def __get_extensions_to_run(path_extensions, path_resources, stage, merge):
     return sorted(extensions, key=lambda obj: (obj["extension_order"] is None, obj["extension_order"]))
 
 
-def review(path_source, path_target, path_resources, merge, stage, config_global):
+def review(path_source, path_target, path_resources, merge, stage, config_global, path_source_v2):
     print('automatic-code-review::review - start')
 
     if 'regexToSkip' in config_global and re.search(config_global['regexToSkip'], merge['title']):
@@ -124,6 +124,7 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
             path_target=path_target,
             path_source=path_source,
             path_output=path_output_data,
+            path_source_v2=path_source_v2,
             merge=merge,
         )
 
@@ -254,6 +255,7 @@ def __write_config(
         path_source,
         path_output,
         merge,
+        path_source_v2,
 ):
     path_config = path_resources + "/configs/" + extension + "/config.json"
     path_config_final = path_extensions + '/' + extension + "/config.json"
@@ -263,6 +265,7 @@ def __write_config(
         extension_language = __get_or_default(config, 'language', 'python')
         config['path_target'] = path_target
         config['path_source'] = path_source
+        config['path_source_v2'] = path_source_v2
         config['path_output'] = path_output
         config['merge'] = merge
 

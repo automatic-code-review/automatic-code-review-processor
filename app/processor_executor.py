@@ -34,7 +34,7 @@ def execute():
     with open(path_resources + "/config.json", 'r') as content:
         config = json.load(content)
 
-    path_target, path_source, merge = workspace.setup(
+    path_target, path_source, merge, path_source_v2 = workspace.setup(
         git_url=args.GIT_URL,
         git_user=args.GIT_USER,
         git_token=args.GIT_TOKEN,
@@ -48,6 +48,7 @@ def execute():
     comments, extensions = review.review(
         path_target=path_target,
         path_source=path_source,
+        path_source_v2=path_source_v2,
         path_resources=path_resources,
         merge=merge,
         stage=args.STAGE,
