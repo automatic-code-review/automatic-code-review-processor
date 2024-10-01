@@ -173,12 +173,12 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
 
 
 def __exec_extension(extension_name, extension_path, extension_language, path_config):
-    if "JAVA" in extension_language:
+    if "JAVA" == extension_language:
         java_jar = f"{extension_path}/{extension_name}.jar"
         print(f'automatic-code-review::review - {extension_name} run start [APP_JAVA] {java_jar}')
         retorno = subprocess.run(["java", "-jar", java_jar, f"--CONFIG_PATH={path_config}"])
 
-    elif "JAVASCRIPT" in extension_language:
+    elif "JAVASCRIPT" == extension_language:
         path_javascript_app = f"{extension_path}/app.js"
         print(f'automatic-code-review::review - {extension_name} run start [APP_JAVASCRIPT] {path_javascript_app}')
         retorno = subprocess.run(["node", path_javascript_app])
