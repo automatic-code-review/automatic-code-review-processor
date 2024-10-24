@@ -21,6 +21,9 @@ def execute():
     parser.add_argument("--STAGE", help="Informe o stage da execucao", default="default")
     parser.add_argument("--SOURCE_PATH", help="Informe o source path, caso o mesmo já exista", default="")
     parser.add_argument("--EXTRA_ARGS", help="Extra args", default="")
+    parser.add_argument("--CLONE_PATH_TARGET",
+                        help="Se deve ou não fazer clone do código fonte target para comparação de alguma extensão",
+                        default=True)
 
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
@@ -43,6 +46,7 @@ def execute():
         git_enum=git_enum,
         path_resources=path_resources,
         path_source=args.SOURCE_PATH,
+        is_clone_path_target=args.CLONE_PATH_TARGET,
     )
 
     comments, extensions = review.review(

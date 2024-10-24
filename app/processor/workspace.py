@@ -12,6 +12,7 @@ def setup(
         path_resources,
         git_enum,
         path_source,
+        is_clone_path_target,
 ):
     print('automatic-code-review::setup - start')
 
@@ -36,17 +37,18 @@ def setup(
     path = path_resources + "/workspace"
     path_target = path + "/repo_target"
 
-    print('automatic-code-review::setup - setup target repository')
-    __setup(
-        path=path_target,
-        changes=changes,
-        field='old_path',
-        branch=merge_request.target_branch,
-        id_project=id_project_target,
-        git_user=git_user,
-        git_token=git_token,
-        git=git,
-    )
+    if is_clone_path_target:
+        print('automatic-code-review::setup - setup target repository')
+        __setup(
+            path=path_target,
+            changes=changes,
+            field='old_path',
+            branch=merge_request.target_branch,
+            id_project=id_project_target,
+            git_user=git_user,
+            git_token=git_token,
+            git=git,
+        )
 
     id_project_source = git.get_id_project_source_by_id_project_target(
         id_project_target=id_project_target,
@@ -68,18 +70,20 @@ def setup(
             git=git,
         )
 
-    print('automatic-code-review::setup - setup source repository v2')
-    path_source_v2 = path + "/repo_source_v2"
-    __setup(
-        path=path_source_v2,
-        changes=None,
-        field=None,
-        branch=merge_request.source_branch,
-        id_project=id_project_source,
-        git_user=git_user,
-        git_token=git_token,
-        git=git,
-    )
+        print('automatic-code-review::setup - setup source repository v2')
+        path_source_v2 = path + "/repo_source_v2"
+        __setup(
+            path=path_source_v2,
+            changes=None,
+            field=None,
+            branch=merge_request.source_branch,
+            id_project=id_project_source,
+            git_user=git_user,
+            git_token=git_token,
+            git=git,
+        )
+    else:
+        path_source_v2 = path_source
 
     project = git.get_project_by_id_project(id_project_target)
 
