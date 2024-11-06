@@ -52,6 +52,7 @@ def __comment_and_snipset(comment, path):
             type_snipset = position['language']
 
         snipset = ''.join(lines[start - 1:end])
+        snipset = snipset[0:10000] # TODO JOGAR ISSO PARA UMA CONFIGURAÇÃO OU ENTENDER COMO MELHORAR ISSO. A API DO GITLAB NAO SUPORTA TEXTO TÃO GRANDE
         comment_str = f"""{comment_str}
 
 ```{type_snipset}
