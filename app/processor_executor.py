@@ -23,7 +23,8 @@ def execute():
     parser.add_argument("--EXTRA_ARGS", help="Extra args", default="")
     parser.add_argument("--CLONE_PATH_TARGET",
                         help="Se deve ou não fazer clone do código fonte target para comparação de alguma extensão",
-                        default=True)
+                        type=str,
+                        default="True")
 
     args = parser.parse_args()
     git_enum = GitEnum[args.GIT_TYPE]
@@ -46,7 +47,7 @@ def execute():
         git_enum=git_enum,
         path_resources=path_resources,
         path_source=args.SOURCE_PATH,
-        is_clone_path_target=args.CLONE_PATH_TARGET,
+        is_clone_path_target=args.CLONE_PATH_TARGET is None or args.CLONE_PATH_TARGET == "True",
     )
 
     comments, extensions = review.review(
