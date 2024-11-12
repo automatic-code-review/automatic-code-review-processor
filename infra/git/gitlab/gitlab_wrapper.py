@@ -23,7 +23,13 @@ class GitLabWrapper(GitWrapper):
 
     def get_changes_by_merge(self, id_merge_request, id_project):
         merge_request = self.gitlab_api.projects.get(id_project).mergerequests.get(id_merge_request)
-        return merge_request.changes()['changes']
+        changes = merge_request.changes()['changes']
+
+        for change in changes:
+            diff = change['diff']
+            change['addedLines'] = self.__parse_diff(diff)
+
+        return changes
 
     def get_merge_request(self, id_merge_request, id_project):
         return self.gitlab_api.projects.get(id_project).mergerequests.get(id_merge_request)
@@ -93,3 +99,35 @@ class GitLabWrapper(GitWrapper):
             })
 
         return commits_behind
+
+    @staticmethod
+    def __parse_diff(diffs):
+        added_lines = []
+        diffs_line = diffs.split('\n')
+
+        current_line = None
+
+        for diff in diffs_line:
+            if not isinstance(diff, str):
+                continue
+
+            if diff.startswith('@@'):
+                add = diff.index('+')
+                add = diff[add:].split(',')
+                current_line = int(add[0].replace('+', ''))
+                if diff.endswith('@@'):
+                    continue
+                pos = diff.rindex('@@')
+                diff = diff[pos + 2:]
+                current_line -= 1
+
+            if diff.startswith('-'):
+                continue
+
+            if diff.startswith('+'):
+                added_lines.append(current_line)
+
+            if current_line is not None:
+                current_line += 1
+
+        return added_lines

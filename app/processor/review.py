@@ -95,6 +95,46 @@ def __get_extensions_to_run(path_extensions, path_resources, stage, merge):
     return sorted(extensions, key=lambda obj: (obj["extension_order"] is None, obj["extension_order"]))
 
 
+def _get_type_by_scope(scope, scopes):
+    for scope_obj in scopes:
+        if scope_obj['scope'] == scope:
+            return scope_obj['type']
+
+    return ""
+
+
+def __verify_can_add_comment(comment, config_global, changes):
+    comment_scope = config_global.get('commentScope', None)
+
+    if comment_scope is None:
+        return True
+
+    position = comment.get('position', None)
+
+    if position is None:
+        return True
+
+    start_in_line = position.get("startInLine", None)
+    end_in_line = position.get("endInLine", None)
+
+    if start_in_line is None or end_in_line is None:
+        return True
+
+    added_lines = []
+    position_path = position['path']
+
+    for change in changes:
+        if change['new_path'] == position_path:
+            added_lines = change['addedLines']
+            break
+
+    for i in (start_in_line, end_in_line):
+        if i in added_lines:
+            return _get_type_by_scope("CHANGED", comment_scope) == "THREAD"
+
+    return _get_type_by_scope("UNCHANGED", comment_scope) == "THREAD"
+
+
 def review(path_source, path_target, path_resources, merge, stage, config_global, path_source_v2):
     print('automatic-code-review::review - start')
 
@@ -160,7 +200,11 @@ def review(path_source, path_target, path_resources, merge, stage, config_global
                 comment['id'] = f"{extension_name}:{comment_id}"
                 comment['comment'] = __comment_and_snipset(comment, path_source)
 
-                comments.append(comment)
+                if __verify_can_add_comment(comment, config_global, merge['changes']):
+                    comments.append(comment)
+                else:
+                    qt_comments -= 1
+                    print(f'automatic-code-review::review - Ignorando comentario. {json.dumps(comment)}')
 
         print(f'automatic-code-review::review - {extension_name} end')
 
