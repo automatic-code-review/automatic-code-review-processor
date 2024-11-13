@@ -114,7 +114,8 @@ class GitLabWrapper(GitWrapper):
             if diff.startswith('@@'):
                 add = diff.index('+')
                 add = diff[add:].split(',')
-                current_line = int(add[0].replace('+', ''))
+                add = add[0].replace('+', '').replace('@@', '').replace(' ', '')
+                current_line = int(add)
                 if diff.endswith('@@'):
                     continue
                 pos = diff.rindex('@@')
