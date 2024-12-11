@@ -3,6 +3,40 @@ from gitlab import GitlabCreateError
 from infra.git import git_wrapper_factory
 
 
+def __verify_resolve_policy(comment, git, id_project, id_merge_request):
+    if 'processorArgs' not in comment or 'resolutionPolicy' not in comment['processorArgs']:
+        return
+
+    resolved_by = comment['resolvedBy']
+    allowed_resolvers = comment['processorArgs']['resolutionPolicy']['allowedResolvers']
+
+    if resolved_by in allowed_resolvers:
+        return
+
+    msg_allowed_resolvers = ', '.join(allowed_resolvers)
+
+    print(f'automatic-code-review::publish::verify_resolve_policy '
+          f'Comentario foi resolvido por {resolved_by}, porém não é permitido. '
+          f'Reabrindo o comentário.'
+          f'[ALLOWED_RESOLVERS] {msg_allowed_resolvers} '
+          f'[COMENTARIO] {comment["comment"]} ')
+
+    id_thread = comment['idThread']
+
+    msg_warning = f'Comentário foi resolvido por {resolved_by}, porém não é permitido.'
+
+    if len(msg_allowed_resolvers) > 0:
+        msg_warning += f' Apenas os usuarios {msg_allowed_resolvers} podem resolver este comentário de forma manual.'
+
+    git.reopen_merge_request_thread(
+        id_project=id_project,
+        id_merge_request=id_merge_request,
+        id_thread=id_thread,
+        msg_warning=msg_warning
+    )
+    comment['resolved'] = False
+
+
 def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token, git_user, extensions):
     print('automatic-code-review::publish - start')
 
@@ -64,6 +98,9 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
                 )
                 comment['found'] = True
                 comment['resolved'] = note['resolved']
+                if 'resolved_by' in note:
+                    comment['resolvedBy'] = note['resolved_by']['username']
+                comment['idThread'] = thread.id
                 found = True
                 break
 
@@ -84,6 +121,9 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
     comments_added = []
 
     for comment in comments:
+        if 'resolved' in comment and comment['resolved']:
+            __verify_resolve_policy(comment, git, id_project, id_merge_request)
+
         if 'found' not in comment or not comment['found']:
             qt_pending_comment += 1
             comment_id = comment['id']

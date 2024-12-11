@@ -81,6 +81,16 @@ class GitLabWrapper(GitWrapper):
     def get_project_by_id_project(self, id_project):
         return self.gitlab_api.projects.get(id_project)
 
+    def reopen_merge_request_thread(self, id_project, id_merge_request, id_thread, msg_warning):
+        project = self.gitlab_api.projects.get(id_project)
+        merge_request = project.mergerequests.get(id_merge_request)
+        discussion = merge_request.discussions.get(id_thread)
+        discussion.resolved = False
+        discussion.save()
+
+        if msg_warning is not None:
+            discussion.notes.create({"body": msg_warning})
+
     def get_commits_behind(self, id_project_target, branch_target, id_project_source, branch_source):
         # TODO SE FOR DIFERENTE TA DANDO PROBLEMA SE A BRANCH NAO EXISTIR, TALVEZ ESTEJA TROCADO
         if branch_target != branch_source:

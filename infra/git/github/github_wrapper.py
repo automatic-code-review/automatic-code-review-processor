@@ -4,6 +4,9 @@ from infra.git.git_wrapper import GitWrapper
 # TODO IMPLEMENTAR CLASSE
 class GitHubWrapper(GitWrapper):
 
+    def reopen_merge_request_thread(self, id_project, id_merge_request, id_thread, msg_warning):
+        pass
+
     def __init__(self, git_url, git_token):
         pass
 

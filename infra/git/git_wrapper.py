@@ -44,5 +44,9 @@ class GitWrapper(ABC):
         pass
 
     @abstractmethod
+    def reopen_merge_request_thread(self, id_project, id_merge_request, id_thread, msg_warning):
+        pass
+
+    @abstractmethod
     def get_commits_behind(self, id_project_target, branch_target, id_project_source, branch_source):
         pass
