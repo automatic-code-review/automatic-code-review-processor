@@ -98,7 +98,7 @@ def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token
                 )
                 comment['found'] = True
                 comment['resolved'] = note['resolved']
-                if 'resolved_by' in note:
+                if 'resolved_by' in note and note['resolved_by'] is not None:
                     comment['resolvedBy'] = note['resolved_by']['username']
                 comment['idThread'] = thread.id
                 found = True
