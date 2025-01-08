@@ -34,6 +34,26 @@ class GitLabWrapper(GitWrapper):
     def get_merge_request(self, id_merge_request, id_project):
         return self.gitlab_api.projects.get(id_project).mergerequests.get(id_merge_request)
 
+    def get_commits(self, merge_request):
+        commits = []
+        per_page = 50
+        current_page = 1
+
+        while True:
+            response = merge_request.commits(per_page=per_page, current_page=current_page, list=True)
+
+            for commit in response:
+                commits.append({
+                    "title": commit.attributes['title'],
+                })
+
+            if len(response) < per_page:
+                break
+
+            current_page += 1
+
+        return commits
+
     def clone_repo(self, url, branch, path):
         if os.path.isdir(path):
             shutil.rmtree(path)

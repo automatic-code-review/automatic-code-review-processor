@@ -22,6 +22,9 @@ class GitHubWrapper(GitWrapper):
     def get_merge_request(self, id_merge_request, id_project):
         pass
 
+    def get_commits(self, merge_request):
+        pass
+
     def clone_repo(self, url, branch, path):
         pass
 

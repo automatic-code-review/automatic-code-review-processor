@@ -20,6 +20,10 @@ class GitWrapper(ABC):
         pass
 
     @abstractmethod
+    def get_commits(self, merge_request):
+        pass
+
+    @abstractmethod
     def clone_repo(self, url, branch, path):
         pass
 

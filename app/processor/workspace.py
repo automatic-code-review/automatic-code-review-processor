@@ -28,6 +28,8 @@ def setup(
         id_project=id_project_target,
     )
 
+    commits = git.get_commits(merge_request)
+
     print('automatic-code-review::setup - find merge changes')
     changes = git.get_changes_by_merge(
         id_merge_request=id_merge_request,
@@ -107,6 +109,7 @@ def setup(
             'source': merge_request.source_branch,
         },
         'commits_behind': commits_behind,
+        'commits': commits,
         "project_name": project.name,
         "project_id": id_project_target,
         "merge_request_id": id_merge_request
