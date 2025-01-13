@@ -13,7 +13,7 @@ class GitLabWrapper(GitWrapper):
     def __init__(self, git_url, git_token):
         self.git_url = git_url
         self.git_token = git_token
-        self.gitlab_api = gitlab.Gitlab(git_url, private_token=git_token)
+        self.gitlab_api = gitlab.Gitlab(git_url, private_token=git_token, timeout=30)
 
     def get_http_url_by_project_id(self, id_project):
         return self.gitlab_api.projects.get(id_project).http_url_to_repo
