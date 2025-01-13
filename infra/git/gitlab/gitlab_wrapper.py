@@ -36,21 +36,12 @@ class GitLabWrapper(GitWrapper):
 
     def get_commits(self, merge_request):
         commits = []
-        per_page = 50
-        current_page = 1
+        response = merge_request.commits(all=True)
 
-        while True:
-            response = merge_request.commits(per_page=per_page, current_page=current_page, list=True)
-
-            for commit in response:
-                commits.append({
-                    "title": commit.attributes['title'],
-                })
-
-            if len(response) < per_page:
-                break
-
-            current_page += 1
+        for commit in response:
+            commits.append({
+                "title": commit.attributes['title'],
+            })
 
         return commits
 
