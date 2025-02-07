@@ -231,7 +231,7 @@ def __exec_extension(extension_name, extension_path, extension_language, path_co
     else:
         path_python_app = f"{extension_path}/app.py"
         print(f'automatic-code-review::review - {extension_name} run start [APP_PYTHON] {path_python_app}')
-        retorno = subprocess.run(['python3.10', path_python_app])
+        retorno = subprocess.run(['python', path_python_app])
 
     return retorno.returncode
 
