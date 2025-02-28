@@ -112,6 +112,7 @@ def setup(
         'commits': commits,
         "project_name": project.name,
         "project_id": id_project_target,
+        "labels": merge_request.labels,
         "merge_request_id": id_merge_request
     }
 
