@@ -69,6 +69,7 @@ def execute():
         git_token=args.GIT_TOKEN,
         git_user=args.GIT_USER,
         extensions=extensions,
+        merge_request=merge,
     )
 
     webhook_add_comment = webhook.add_comment(
