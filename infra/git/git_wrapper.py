@@ -36,7 +36,7 @@ class GitWrapper(ABC):
         pass
 
     @abstractmethod
-    def create_merge_request_thread(self, comment, id_project, id_merge_request, position):
+    def create_merge_request_thread(self, comment, id_project, id_merge_request, position, merge_request):
         pass
 
     @abstractmethod

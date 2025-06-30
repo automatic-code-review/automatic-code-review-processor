@@ -91,29 +91,30 @@ def setup(
 
     commits_behind = git.get_commits_behind(
         id_project_target=id_project_target,
-        branch_target=merge_request.target_branch,
+        branch_target=merge_request['target_branch'],
         id_project_source=id_project_source,
-        branch_source=merge_request.source_branch
+        branch_source=merge_request['source_branch'],
     )
 
     merge_json = {
         'git_type': git_enum.name,
-        'title': merge_request.title,
+        'title': merge_request['title'],
         'changes': changes,
-        'assignee': merge_request.assignee,
-        'author': merge_request.author['username'],
-        'web_url': merge_request.web_url,
-        'created_at': merge_request.created_at,
+        'assignee': merge_request['assignee'],
+        'author': merge_request['author']['username'],
+        'web_url': merge_request['web_url'],
+        'created_at': merge_request['created_at'],
         'branch': {
-            'target': merge_request.target_branch,
-            'source': merge_request.source_branch,
+            'target': merge_request['target_branch'],
+            'source': merge_request['source_branch'],
         },
         'commits_behind': commits_behind,
         'commits': commits,
-        "project_name": project.name,
+        "project_name": project['name'],
         "project_id": id_project_target,
-        "labels": merge_request.labels,
-        "merge_request_id": id_merge_request
+        "labels": merge_request['labels'],
+        "merge_request_id": id_merge_request,
+        "last_commit_id": merge_request.get('last_commit_id', None),
     }
 
     print('automatic-code-review::setup - end')

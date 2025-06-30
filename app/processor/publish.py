@@ -37,7 +37,7 @@ def __verify_resolve_policy(comment, git, id_project, id_merge_request):
     comment['resolved'] = False
 
 
-def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token, git_user, extensions):
+def publish(comments, id_project, id_merge_request, git_enum, git_url, git_token, git_user, extensions, merge_request):
     print('automatic-code-review::publish - start')
 
     git = git_wrapper_factory.create(
@@ -155,6 +155,7 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
                 id_merge_request=id_merge_request,
                 position=position,
                 git=git,
+                merge_request=merge_request,
             )
             comments_added.append({
                 'comment': comment_final,
@@ -172,13 +173,14 @@ AUTOMATIC CODE REVIEW ISSUE ID ({comment_id})"""
     return qt_pending_comment, comments_added
 
 
-def __create_discussion(comment, id_project, id_merge_request, position, git):
+def __create_discussion(comment, id_project, id_merge_request, position, git, merge_request):
     try:
         return git.create_merge_request_thread(
             comment=comment,
             id_project=id_project,
             id_merge_request=id_merge_request,
             position=position,
+            merge_request=merge_request
         )
 
     except GitlabCreateError as e:
@@ -190,6 +192,7 @@ def __create_discussion(comment, id_project, id_merge_request, position, git):
                 id_project=id_project,
                 id_merge_request=id_merge_request,
                 position=None,
+                merge_request=merge_request
             )
         elif e.response_code == 500 and position is not None:
             print('automatic-code-review::create_discussion - fail add (error code 500), retry without position')
@@ -199,6 +202,7 @@ def __create_discussion(comment, id_project, id_merge_request, position, git):
                 id_project=id_project,
                 id_merge_request=id_merge_request,
                 position=None,
+                merge_request=merge_request
             )
         else:
             raise e
