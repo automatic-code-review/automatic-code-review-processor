@@ -5,4 +5,5 @@ python main.py \
 	--GIT_TOKEN=TOKEN \
 	--GIT_PROJECT_ID=1 \
 	--GIT_MERGE_REQUEST_ID=2 \
+	--EXECUTION_PURPOSE=merge_request_review \
 	--STAGE=default

@@ -21,6 +21,13 @@ def execute():
     parser.add_argument("--STAGE", help="Informe o stage da execucao", default="default")
     parser.add_argument("--SOURCE_PATH", help="Informe o source path, caso o mesmo já exista", default="")
     parser.add_argument("--EXTRA_ARGS", help="Extra args", default="")
+    parser.add_argument(
+        "--EXECUTION_PURPOSE",
+        help=(
+            "Informe o propósito da execução. Exemplos: "
+            "merge_request_review, source_code_review"
+        ),
+    )
     parser.add_argument("--CLONE_PATH_TARGET",
                         help="Se deve ou não fazer clone do código fonte target para comparação de alguma extensão",
                         type=str,
@@ -58,6 +65,7 @@ def execute():
         merge=merge,
         stage=args.STAGE,
         config_global=config,
+        execution_purpose=args.EXECUTION_PURPOSE,
     )
 
     qt_pending_comment, comments_added = publish.publish(
